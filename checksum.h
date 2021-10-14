@@ -1,5 +1,7 @@
 #include <vector>
 #include <algorithm>
+#include <stdio.h>
+#include <iostream>
 
 bool luhn_algorithm(long int num)
 {
@@ -90,6 +92,42 @@ bool verhoeff_algorithm(long int num)
     }
     // *num* is valid iff c=0
     bool check_dgt_correct = c == 0;
+
+    return check_dgt_correct;
+}
+
+bool damm_algorithm(long int num)
+{
+    /*
+     * https://en.wikipedia.org/wiki/Damm_algorithm
+     * Quasigroup table from pg. 98 of
+     * http://archiv.ub.uni-marburg.de/diss/z2004/0516/pdf/dhmd.pdf
+     */
+    int quasigroup_tbl[10][10] = {
+        {0, 3, 1, 7, 5, 9, 8, 6, 4, 2},
+        {7, 0, 9, 2, 1, 5, 4, 8, 6, 3},
+        {4, 2, 0, 6, 8, 7, 1, 3, 5, 9},
+        {1, 7, 5, 0, 9, 8, 3, 4, 2, 6},
+        {6, 1, 2, 3, 0, 4, 5, 9, 7, 8},
+        {3, 6, 7, 4, 2, 0, 9, 5, 8, 1},
+        {5, 8, 6, 9, 7, 2, 0, 1, 3, 4},
+        {8, 9, 4, 5, 3, 6, 2, 0, 1, 7},
+        {9, 4, 3, 8, 6, 1, 7, 2, 0, 5},
+        {2, 5, 8, 1, 4, 3, 6, 7, 9, 0}
+    };
+
+    std::vector<int> num_dgts;
+    while (num) {
+        num_dgts.push_back(num % 10);
+        num /= 10;
+    }
+    reverse(num_dgts.begin(), num_dgts.end());
+
+    int n = 0;
+    for (auto it = num_dgts.begin(); it != num_dgts.end(); it++) {
+        n = quasigroup_tbl[n][*it];
+    }
+    bool check_dgt_correct = n == 0;
 
     return check_dgt_correct;
 }

@@ -1,7 +1,6 @@
+#include "utils.h"
+
 #include <vector>
-#include <algorithm>
-#include <stdio.h>
-#include <iostream>
 
 class AbstractChecksum {
 public:
@@ -15,18 +14,13 @@ class Luhn: public AbstractChecksum {
      */
 
 public:
-    bool validate_check_dgt(long int num) {
-        auto num_copy = num / 10;
-        std::vector<int> check_num_dgts;
-        while (num_copy) {
-            check_num_dgts.push_back(num_copy % 10);
-            num_copy /= 10;
-        }
-        reverse(check_num_dgts.begin(), check_num_dgts.end());
+    static bool validate_check_dgt(long int num) {
+        int check_digit = num % 10;
+        std::vector<int> num_dgts = get_digit_vec(num / 10);
 
         int double_dgt;
-        for (std::vector<int>::iterator it = check_num_dgts.end() - 1;
-             it >= check_num_dgts.begin(); ) {
+        for (std::vector<int>::iterator it = num_dgts.end() - 1;
+             it >= num_dgts.begin(); ) {
             double_dgt = *it * 2;
             *it = 0;
             while (double_dgt) {
@@ -37,11 +31,10 @@ public:
         }
 
         int sum_transformed_dgts = 0;
-        for (int &x : check_num_dgts)
+        for (int &x : num_dgts)
             sum_transformed_dgts += x;
 
         int luhn_num = 10 - sum_transformed_dgts % 10;
-        int check_digit = num % 10;  // final digit in original number
         bool check_digit_correct = check_digit == luhn_num;
 
         return check_digit_correct;
@@ -57,7 +50,7 @@ class Verhoeff: public AbstractChecksum {
      * inv: multiplicative inverse of the index
      * p: specific permutation applied iteratively
      */
-     int d[10][10] = {
+     static constexpr int d[10][10] = {
          {0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
          {1, 2, 3, 4, 0, 6, 7, 8, 9, 5},
          {2, 3, 4, 0, 1, 7, 8, 9, 5, 6},
@@ -69,8 +62,8 @@ class Verhoeff: public AbstractChecksum {
          {8, 7, 6, 5, 9, 3, 2, 1, 0, 4},
          {9, 8, 7, 6, 5, 4, 3, 2, 1, 0}
      };
-     int inv[10] = {0, 4, 3, 2, 1, 5, 6, 7, 8, 9};
-     int p[8][10] = {
+     static constexpr int inv[10] = {0, 4, 3, 2, 1, 5, 6, 7, 8, 9};
+     static constexpr int p[8][10] = {
          {0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
          {1, 5, 7, 6, 2, 8, 3, 0, 9, 4},
          {5, 8, 0, 3, 7, 9, 6, 1, 4, 2},
@@ -82,13 +75,9 @@ class Verhoeff: public AbstractChecksum {
      };
 
 public:
-    bool validate_check_dgt(long int num) {
-        // Create array out of the individual digits of *num*, right to left
-        std::vector<int> num_dgts;
-        while (num) {
-            num_dgts.push_back(num % 10);
-            num /= 10;
-        }
+    static bool validate_check_dgt(long int num) {
+        std::vector<int> num_dgts = get_digit_vec(num, true);
+
         // For each index i=1,2,...,len(num_dgts): c = d(c, p(i mod 8, num[i]))
         int c = 0;
         for (auto idx = 0; idx != num_dgts.size(); idx++) {
@@ -106,7 +95,7 @@ class Damm: public AbstractChecksum {
      * https://en.wikipedia.org/wiki/Damm_algorithm
      * Other quasigroup tables are possible
      */
-     int quasigroup_tbl[10][10] = {
+     static constexpr int quasigroup_tbl[10][10] = {
          {0, 3, 1, 7, 5, 9, 8, 6, 4, 2},
          {7, 0, 9, 2, 1, 5, 4, 8, 6, 3},
          {4, 2, 0, 6, 8, 7, 1, 3, 5, 9},
@@ -120,13 +109,8 @@ class Damm: public AbstractChecksum {
      };
 
 public:
-    bool validate_check_dgt(long int num) {
-        std::vector<int> num_dgts;
-        while (num) {
-            num_dgts.push_back(num % 10);
-            num /= 10;
-        }
-        reverse(num_dgts.begin(), num_dgts.end());
+    static bool validate_check_dgt(long int num) {
+        std::vector<int> num_dgts = get_digit_vec(num);
 
         int n = 0;
         for (auto it = num_dgts.begin(); it != num_dgts.end(); it++) {

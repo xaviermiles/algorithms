@@ -4,7 +4,7 @@
 
 class AbstractChecksum {
 public:
-    // int calculate_check_dgt(long int num);
+    int calculate_check_dgt(long int num);
     bool validate_check_dgt(long int num);
 };
 
@@ -14,9 +14,8 @@ class Luhn: public AbstractChecksum {
      */
 
 public:
-    static bool validate_check_dgt(long int num) {
-        int check_digit = num % 10;
-        std::vector<int> num_dgts = get_digit_vec(num / 10);
+    static int calculate_check_dgt(long int num) {
+        std::vector<int> num_dgts = get_digit_vec(num);
 
         int double_dgt;
         for (std::vector<int>::iterator it = num_dgts.end() - 1;
@@ -35,9 +34,14 @@ public:
             sum_transformed_dgts += x;
 
         int luhn_num = 10 - sum_transformed_dgts % 10;
-        bool check_digit_correct = check_digit == luhn_num;
+        return luhn_num;
+    }
 
-        return check_digit_correct;
+    static bool validate_check_dgt(long int num) {
+        int check_dgt = num % 10;
+        int luhn_num = Luhn::calculate_check_dgt(num / 10);
+        bool check_dgt_correct = check_dgt == luhn_num;
+        return check_dgt_correct;
     }
 };
 
@@ -75,17 +79,27 @@ class Verhoeff: public AbstractChecksum {
      };
 
 public:
+    static int calculate_check_dgt(long int num) {
+        // "append zero" before performing calculation
+        std::vector<int> num_dgts_plus = get_digit_vec(10 * num, true);
+        // For each index i=1,2,...,len(num_dgts): c = d(c, p(i mod 8, num[i]))
+        int c = 0;
+        for (auto idx = 0; idx != num_dgts_plus.size(); idx++) {
+            c = d[c][p[idx][num_dgts_plus[idx] % 8]];
+        }
+        int check_dgt = inv[c];
+        return check_dgt;
+    }
+
     static bool validate_check_dgt(long int num) {
         std::vector<int> num_dgts = get_digit_vec(num, true);
-
         // For each index i=1,2,...,len(num_dgts): c = d(c, p(i mod 8, num[i]))
         int c = 0;
         for (auto idx = 0; idx != num_dgts.size(); idx++) {
-            c = d[c][p[num_dgts[idx] % 8][idx]];
+            c = d[c][p[idx][num_dgts[idx] % 8]];
         }
         // *num* is valid iff c=0
         bool check_dgt_correct = c == 0;
-
         return check_dgt_correct;
     }
 };
@@ -109,15 +123,19 @@ class Damm: public AbstractChecksum {
      };
 
 public:
-    static bool validate_check_dgt(long int num) {
+    static int calculate_check_dgt(long int num) {
         std::vector<int> num_dgts = get_digit_vec(num);
 
         int n = 0;
         for (auto it = num_dgts.begin(); it != num_dgts.end(); it++) {
             n = quasigroup_tbl[n][*it];
         }
-        bool check_dgt_correct = n == 0;
+        return n;
+    }
 
+    static bool validate_check_dgt(long int num) {
+        int n = Damm::calculate_check_dgt(num);
+        bool check_dgt_correct = n == 0;
         return check_dgt_correct;
     }
 };

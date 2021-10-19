@@ -13,8 +13,10 @@ void test_luhn_algorithm()
         123456789    // should not pass
     };
     for (auto &x : test_nums) {
-        bool passes_test = Luhn::validate_check_dgt(x);
-        cout << x << " - " << (passes_test ? "Yay" : "Nay") << endl;
+        bool test_1 = Luhn::calculate_check_dgt(x / 10) == x % 10;
+        bool test_2 = Luhn::validate_check_dgt(x);
+        cout << x << " - " << (test_1 ? "Yay" : "Nay") <<
+                ", " << (test_2 ? "Yay" : "Nay") << endl;
     }
     cout << endl;
 }
@@ -27,8 +29,10 @@ void test_verhoeff_algorithm()
         123456789 // shouldn't pass
     };
     for (auto &x : test_nums) {
-        bool passes_test = Verhoeff::validate_check_dgt(x);
-        cout << x << " - " << (passes_test ? "Yay" : "Nay") << endl;
+        bool test_1 = Verhoeff::calculate_check_dgt(x / 10) == x % 10;
+        bool test_2 = Verhoeff::validate_check_dgt(x);
+        cout << x << " - " << (test_1 ? "Yay" : "Nay") <<
+                ", " << (test_2 ? "Yay" : "Nay") << endl;
     }
     cout << endl;
 }
@@ -41,15 +45,16 @@ void test_damm_algorithm()
         123456789 // shouldn't pass
     };
     for (auto &x : test_nums) {
-        bool passes_test = Damm::validate_check_dgt(x);
-        cout << x << " - " << (passes_test ? "Yay" : "Nay") << endl;
+        bool test_1 =  Damm::calculate_check_dgt(x / 10) == x % 10;
+        bool test_2 = Damm::validate_check_dgt(x);
+        cout << x << " - " << (test_1 ? "Yay" : "Nay") <<
+                ", " << (test_2 ? "Yay" : "Nay") << endl;
     }
     cout << endl;
 }
 
 int main()
 {
-    // Uncomment as wanted:
     test_luhn_algorithm();
     test_verhoeff_algorithm();
     test_damm_algorithm();

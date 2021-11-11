@@ -24,6 +24,48 @@ void test_euclids_gcd() {
     cout << endl;
 }
 
+void test_is_coprime() {
+    int test_sets[2][3] = {
+        {14, 25, 1},
+        {14, 21, 0}
+    };
+    cout << "Testing is_coprime" << endl;
+    for (auto &set: test_sets) {
+        cout << (is_coprime(set[0], set[1]) == set[2]) << ", " <<
+                (is_coprime(set[1], set[0]) == set[2]) << endl;
+    }
+    cout << endl;
+}
+
+void test_lcm() {
+    int test_sets[2][3] = {
+        {4, 10, 20},
+        {-5, 12, -60}
+    };
+    cout << "Testing lcm" << endl;
+    for (auto &set: test_sets) {
+        cout << (lcm(set[0], set[1]) == set[2]) << ", " <<
+                (lcm(set[1], set[0]) == set[2]) << endl;
+    }
+    cout << endl;
+}
+
+void test_is_prime() {
+    // TODO: add bigger primes?
+    int test_sets[2][3] = {
+        {7919, 1},
+        {7918, 0}
+    };
+    cout << "Testing is_prime" << endl;
+    for (auto &set: test_sets) {
+        cout << (is_prime(set[0]) == set[1]) << endl;
+    }
+    cout << endl;
+}
+
 int main() {
     test_euclids_gcd();
+    test_is_coprime();
+    test_lcm();
+    test_is_prime();
 }

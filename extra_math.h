@@ -1,4 +1,9 @@
+#pragma once
+
 #include <math.h>
+#include <vector>
+
+using std::vector;
 
 int euclids_gcd(int x, int y) {
     /*
@@ -37,7 +42,7 @@ int lcm(int x, int y) {
     return x * y / euclids_gcd(x, y);
 }
 
-bool is_prime(int n) {
+bool is_prime(unsigned int n) {
     /*
      * Is the integer a prime number? - Trial division technique
      */
@@ -45,4 +50,26 @@ bool is_prime(int n) {
         if (euclids_gcd(n, x) > 1) return false;
     }
     return true;
+}
+
+vector<int> sieve_of_eratostheses(unsigned int n) {
+    /*
+     * Return a vector of prime numbers up to non-negative number `n`
+     */
+    vector<bool> is_idx_prime(n - 1, true);  // don't need slot for 1
+    for (int i = 2; i <= ceil(sqrt(n)); i++) {
+        if (is_idx_prime[i - 2]) {
+            // mark off all multiples (starting from square) as false
+            for (int j = i * i; j <= n;) {
+                is_idx_prime[j - 2] = false;
+                j = j + i;
+            }
+        }
+    }
+    // the indices-minus-two of `is_idx_prime` which map to true are prime
+    vector<int> prime_nums;
+    for (auto i = 2; i <= n; i++) {
+        if (is_idx_prime[i - 2]) prime_nums.push_back(i);
+    }
+    return prime_nums;
 }

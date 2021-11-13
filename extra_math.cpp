@@ -1,4 +1,5 @@
 #include "extra_math.h"
+#include "utils.h"
 
 #include <iostream>
 
@@ -52,7 +53,7 @@ void test_lcm() {
 
 void test_is_prime() {
     // TODO: add bigger primes?
-    int test_sets[2][3] = {
+    unsigned int test_sets[2][3] = {
         {7919, 1},
         {7918, 0}
     };
@@ -63,9 +64,19 @@ void test_is_prime() {
     cout << endl;
 }
 
+void test_sieve_of_eratostheses() {
+    cout << "Testing sieve_of_eratostheses" << endl;
+    std::vector<int> expected = {2,3,5,7,11,13,17,19,23,29};
+    cout << (sieve_of_eratostheses(30) == expected ? "ya" : "na") << endl;
+    std::string sep = ", ";
+    cout << join_vec(sieve_of_eratostheses(30), sep) << endl;
+}
+
 int main() {
     test_euclids_gcd();
     test_is_coprime();
     test_lcm();
+
     test_is_prime();
+    test_sieve_of_eratostheses();
 }

@@ -64,12 +64,18 @@ void test_is_prime() {
     cout << endl;
 }
 
-void test_sieve_of_eratostheses() {
-    cout << "Testing sieve_of_eratostheses" << endl;
+void test_sieve_of_eratosthenes() {
+    cout << "Testing sieve_of_eratosthenes and segmented_sieve_of_eratosthenes"
+         << endl;
+    int n = 30;
     std::vector<int> expected = {2,3,5,7,11,13,17,19,23,29};
-    cout << (sieve_of_eratostheses(30) == expected ? "ya" : "na") << endl;
+    cout << (sieve_of_eratosthenes(n) == expected ? "ya" : "na") << '\n'
+         << (segmented_sieve_of_eratosthenes(n, 0.5) == expected ? "ya" : "na")
+         << (segmented_sieve_of_eratosthenes(n, 0.9) == expected ? "ya" : "na")
+         << (segmented_sieve_of_eratosthenes(n, 0.2) == expected ? "ya" : "na")
+         << endl;
     std::string sep = ", ";
-    cout << join_vec(sieve_of_eratostheses(30), sep) << endl;
+    cout << join_vec(segmented_sieve_of_eratosthenes(n, 0.5), sep) << endl;
 }
 
 int main() {
@@ -78,5 +84,5 @@ int main() {
     test_lcm();
 
     test_is_prime();
-    test_sieve_of_eratostheses();
+    test_sieve_of_eratosthenes();
 }

@@ -76,6 +76,7 @@ void test_sieve_of_eratosthenes() {
           endl;
   std::string sep = ", ";
   cout << join_vec(segmented_sieve_of_eratosthenes(n, 0.5), sep) << endl;
+  cout << join_vec(sieve_of_atkins(n), sep) << endl;
 }
 
 int main() {

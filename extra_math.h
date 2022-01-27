@@ -1,5 +1,7 @@
 #pragma once
 
+#include"utils.h"
+
 #include <math.h>
 #include <vector>
 #include <algorithm>
@@ -41,6 +43,23 @@ int lcm(int x, int y) {
    * Least common multiple of two integers
    */
   return x * y / euclids_gcd(x, y);
+}
+
+bool is_palindrome(int x) {
+  /*
+   * Is the integer a palindrome?
+   */
+  std::vector<int> digits;
+  while (x > 0) {
+    int final_digit = x % 10;
+    digits.push_back(final_digit);
+    x /= 10;
+  }
+  for (int i = 0; i < digits.size() / 2; i++) {
+    if (digits[i] != digits[digits.size() - 1 - i])
+      return false;
+  }
+  return true;
 }
 
 bool is_prime(unsigned int n) {
@@ -143,4 +162,84 @@ vector<int> segmented_sieve_of_eratosthenes(unsigned int n, float d) {
     }
   }
   return primes;
+}
+
+#include <iostream> // FOR DEBUGGING
+vector<int> sieve_of_atkins(unsigned int n) {
+  /*
+   * NOT WORKING YET
+   *
+   * "modern algorithm" for finding prime numbers (created in 2003). This does
+   * some more work at the start and achieves a better asymptotic complexity.
+   * https://en.wikipedia.org/wiki/Sieve_of_Atkin
+   */
+  vector<int> results{2, 3, 5};
+  vector<bool> is_prime(n, true);  // (i-1) slot refers to whether i is prime
+  int r;
+  vector<int> special_1{1, 13, 17, 29, 37, 41, 49, 53},
+              special_2{7, 19, 31, 43},
+              special_3{11, 23, 47, 59};
+  // 3. Do the work at the start
+  for (int z = 1; z < n; z++) {
+
+    std::cout << z << std::endl;
+    r = z % 60;
+    if (std::any_of(special_1.cbegin(), special_1.cend(), [r](int x) { return r == x; })) {
+      // 4x^2 + y^2 = z
+      // <=> y = +/- sqrt(z - 4x^2)
+      // only need positive square root, as primes must be positive
+      std::cout << "special_1" << std::endl;
+      for (int x = 1; x < n; x++) {
+        // std::cout << x << '*' << sqrt(z - 4 * pow(x, 2.0)) << std::endl;
+        double y = sqrt(z - 4 * pow(x, 2.0));
+        if (isnan(y)) {
+          break;
+        } else if (floor(y) == y) {
+          is_prime[x - 1] = !is_prime[x - 1];
+          is_prime[y - 1] = !is_prime[y - 1];
+        }
+      }
+    // } else if (true) {
+    //   std::cout << "ooo" <<std::endl;
+    } else if (std::any_of(special_2.cbegin(), special_2.cend(), [r](int x) { return r == x; })) {
+      // 3x^2 + y^2 = i <=> y = +sqrt(z - 3x^2)
+      std::cout << "special_2" << std::endl;
+      for (int x = 1; x < n; x++) {
+        double y = sqrt(z - 3 * pow(x, 2.0));
+        if (isnan(y)) {
+          break;
+        } else if (floor(y) == y) {
+          is_prime[x - 1] = !is_prime[x - 1];
+          is_prime[y - 1] = !is_prime[y - 1];
+        }
+      }
+    } else if (std::any_of(special_3.cbegin(), special_3.cend(), [r](int x) { return r == x; })) {
+      // 3x^2 - y^2 = z; x > y <=> y = +sqrt(3x^2 - z); x > y
+      std::cout << "special_3" << std::endl;
+      for (int x = n; x > 0; x--) {
+        double y = sqrt(3 * pow(x, 2.0) - z);
+        if (isnan(y) || x < y) {
+          break;
+        } else if (floor(y) == y) {
+          is_prime[x - 1] = !is_prime[x - 1];
+          is_prime[y - 1] = !is_prime[y - 1];
+        }
+      }
+    }
+    for (auto i = 0;i < is_prime.size();i++) { std::cout << is_prime[i]; }
+    std::cout << std::endl;
+  }
+  for (int i = 2; i < n; i++) {
+    if (is_prime[i - 1]) {
+      results.push_back(i);
+      // Mark off multiples of this prime
+      int square_mult = pow(i, 2.0);
+      while (square_mult < n) {
+        is_prime[square_mult - 1] = false;
+        square_mult += pow(i, 2.0);
+      }
+    }
+  }
+
+  return results;
 }

@@ -62,6 +62,31 @@ bool is_palindrome(int x) {
   return true;
 }
 
+vector<int> get_proper_divisors(unsigned int x) {
+  /*
+   * Get proper divisors of x (proper -> not including x itself)
+   */
+  vector<int> divisors = {1};
+  for (int i = 2; i < floor(sqrt(x)); i++) {
+    if (x % i == 0) {
+      divisors.push_back(i);
+      divisors.push_back(x / i);
+    }
+  }
+  if (std::fmod(x, sqrt(x)) == 0)
+    divisors.push_back(sqrt(x));
+  return divisors;
+}
+
+vector<int> get_divisors(unsigned int x) {
+  /*
+   * Get divisors of x
+   */
+  vector<int> divisors = get_proper_divisors(x);
+  divisors.push_back(x);
+  return divisors;
+}
+
 bool is_prime(unsigned int n) {
   /*
    * Is the integer a prime number? - Trial division technique

@@ -1,6 +1,6 @@
 #pragma once
 
-#include"utils.h"
+#include "utils.h"
 
 #include <math.h>
 #include <vector>
@@ -67,7 +67,7 @@ vector<int> get_proper_divisors(unsigned int x) {
    * Get proper divisors of x (proper -> not including x itself)
    */
   vector<int> divisors = {1};
-  for (int i = 2; i < floor(sqrt(x)); i++) {
+  for (int i = 2; i < ceil(sqrt(x)); i++) {
     if (x % i == 0) {
       divisors.push_back(i);
       divisors.push_back(x / i);

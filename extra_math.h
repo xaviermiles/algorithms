@@ -55,7 +55,7 @@ bool is_palindrome(int x) {
     digits.push_back(final_digit);
     x /= 10;
   }
-  for (int i = 0; i < digits.size() / 2; i++) {
+  for (int i = 0; i < digits.size() / 2; ++i) {
     if (digits[i] != digits[digits.size() - 1 - i])
       return false;
   }
@@ -67,7 +67,7 @@ vector<int> get_proper_divisors(unsigned int x) {
    * Get proper divisors of x (proper -> not including x itself)
    */
   vector<int> divisors = {1};
-  for (int i = 2; i < ceil(sqrt(x)); i++) {
+  for (int i = 2; i < ceil(sqrt(x)); ++i) {
     if (x % i == 0) {
       divisors.push_back(i);
       divisors.push_back(x / i);
@@ -91,7 +91,7 @@ bool is_prime(unsigned int n) {
   /*
    * Is the integer a prime number? - Trial division technique
    */
-  for (int x = 2; x <= ceil(sqrt(n)); x++) {
+  for (int x = 2; x <= ceil(sqrt(n)); ++x) {
     if (euclids_gcd(n, x) > 1) return false;
   }
   return true;
@@ -102,7 +102,7 @@ vector<int> sieve_of_eratosthenes(unsigned int n) {
    * Return a vector of prime numbers up to non-negative number `n`
    */
   vector<bool> is_idx_prime(n - 1, true);  // don't need slot for 1
-  for (int i = 2; i <= ceil(sqrt(n)); i++) {
+  for (int i = 2; i <= ceil(sqrt(n)); ++i) {
     if (is_idx_prime[i - 2]) {
       // mark off all multiples (starting from square) as false
       for (int j = i * i; j <= n;) {
@@ -113,7 +113,7 @@ vector<int> sieve_of_eratosthenes(unsigned int n) {
   }
   // the indices-minus-two of `is_idx_prime` which map to true are prime
   vector<int> primes;
-  for (auto i = 2; i <= n; i++) {
+  for (auto i = 2; i <= n; ++i) {
     if (is_idx_prime[i - 2]) {
       primes.push_back(i);
     }
@@ -142,14 +142,14 @@ vector<int> segmented_sieve_of_eratosthenes(unsigned int n, float d) {
   int idx_bound, bins[num_bins][bin_size];
   // the last bin may have some unused spots:
   std::fill_n(bins[num_bins], bin_size, -1);
-  for (int i = 0; i <= num_bins; i++) {
+  for (int i = 0; i <= num_bins; ++i) {
     // How to efficiently omit numbers greater than n?
     if (i == num_bins) {
       idx_bound =  (n - 2) - (num_bins * bin_size);
     } else {
       idx_bound = bin_size;
     }
-    for (int j = 0; j <= idx_bound; j++) {
+    for (int j = 0; j <= idx_bound; ++j) {
       bins[i][j] = i * bin_size + j + 2;
     }
   }
@@ -170,7 +170,7 @@ vector<int> segmented_sieve_of_eratosthenes(unsigned int n, float d) {
       high = bins[i][bin_size];
     }
 
-    for (auto j = 0; j < primes.size() & primes[j] <= sqrt(high); j++) {
+    for (auto j = 0; j < primes.size() & primes[j] <= sqrt(high); ++j) {
       // ...find lowest multiple of p between m-d and m, and enumerating
       // its multiples in steps of p as usual.
       for (int k = primes[j]; k <= high; k += primes[j]) {
@@ -180,7 +180,7 @@ vector<int> segmented_sieve_of_eratosthenes(unsigned int n, float d) {
       }
     }
     // push results into `primes`
-    for (int z = 0; z <= idx_bound; z++) {
+    for (int z = 0; z <= idx_bound; ++z) {
       if (is_prime_per_bin[z]) {
         primes.push_back(bins[i][z]);
       }
@@ -205,7 +205,7 @@ vector<int> sieve_of_atkins(unsigned int n) {
               special_2{7, 19, 31, 43},
               special_3{11, 23, 47, 59};
   // 3. Do the work at the start
-  for (int z = 1; z < n; z++) {
+  for (int z = 1; z < n; ++z) {
 
     std::cout << z << std::endl;
     r = z % 60;
@@ -214,7 +214,7 @@ vector<int> sieve_of_atkins(unsigned int n) {
       // <=> y = +/- sqrt(z - 4x^2)
       // only need positive square root, as primes must be positive
       std::cout << "special_1" << std::endl;
-      for (int x = 1; x < n; x++) {
+      for (int x = 1; x < n; ++x) {
         // std::cout << x << '*' << sqrt(z - 4 * pow(x, 2.0)) << std::endl;
         double y = sqrt(z - 4 * pow(x, 2.0));
         if (isnan(y)) {
@@ -229,7 +229,7 @@ vector<int> sieve_of_atkins(unsigned int n) {
     } else if (std::any_of(special_2.cbegin(), special_2.cend(), [r](int x) { return r == x; })) {
       // 3x^2 + y^2 = i <=> y = +sqrt(z - 3x^2)
       std::cout << "special_2" << std::endl;
-      for (int x = 1; x < n; x++) {
+      for (int x = 1; x < n; ++x) {
         double y = sqrt(z - 3 * pow(x, 2.0));
         if (isnan(y)) {
           break;
@@ -241,7 +241,7 @@ vector<int> sieve_of_atkins(unsigned int n) {
     } else if (std::any_of(special_3.cbegin(), special_3.cend(), [r](int x) { return r == x; })) {
       // 3x^2 - y^2 = z; x > y <=> y = +sqrt(3x^2 - z); x > y
       std::cout << "special_3" << std::endl;
-      for (int x = n; x > 0; x--) {
+      for (int x = n; x > 0; --x) {
         double y = sqrt(3 * pow(x, 2.0) - z);
         if (isnan(y) || x < y) {
           break;
@@ -251,10 +251,10 @@ vector<int> sieve_of_atkins(unsigned int n) {
         }
       }
     }
-    for (auto i = 0;i < is_prime.size();i++) { std::cout << is_prime[i]; }
+    for (auto i = 0;i < is_prime.size();++i) { std::cout << is_prime[i]; }
     std::cout << std::endl;
   }
-  for (int i = 2; i < n; i++) {
+  for (int i = 2; i < n; ++i) {
     if (is_prime[i - 1]) {
       results.push_back(i);
       // Mark off multiples of this prime

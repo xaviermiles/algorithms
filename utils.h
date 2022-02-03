@@ -25,7 +25,7 @@ std::string join_vec(std::vector<int> vec, std::string sep) {
    * Join elements of vector, separated by `sep`
    */
   std::stringstream ss;
-  for (size_t i = 0; i < vec.size(); i++) {
+  for (size_t i = 0; i < vec.size(); ++i) {
     if (i != 0)
       ss << sep;
     ss << vec[i];

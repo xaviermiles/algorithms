@@ -84,7 +84,7 @@ class Verhoeff: public AbstractChecksum {
       std::vector < int > num_dgts_plus = get_digit_vec(10 * num, true);
       // For each index i=1,2,...,len(num_dgts): c = d(c, p(i mod 8, num[i]))
       int c = 0;
-      for (auto idx = 0; idx != num_dgts_plus.size(); idx++) {
+      for (auto idx = 0; idx != num_dgts_plus.size(); ++idx) {
         c = d[c][p[idx][num_dgts_plus[idx] % 8]];
       }
       int check_dgt = inv[c];
@@ -95,7 +95,7 @@ class Verhoeff: public AbstractChecksum {
     std::vector < int > num_dgts = get_digit_vec(num, true);
     // For each index i=1,2,...,len(num_dgts): c = d(c, p(i mod 8, num[i]))
     int c = 0;
-    for (auto idx = 0; idx != num_dgts.size(); idx++) {
+    for (auto idx = 0; idx != num_dgts.size(); ++idx) {
       c = d[c][p[idx][num_dgts[idx] % 8]];
     }
     // *num* is valid iff c=0
@@ -127,7 +127,7 @@ class Damm: public AbstractChecksum {
       std::vector<int> num_dgts = get_digit_vec(num);
 
       int n = 0;
-      for (auto it = num_dgts.begin(); it != num_dgts.end(); it++) {
+      for (auto it = num_dgts.begin(); it != num_dgts.end(); ++it) {
         n = quasigroup_tbl[n][*it];
       }
       return n;

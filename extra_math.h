@@ -31,6 +31,16 @@ int euclids_gcd(int x, int y) {
   }
 }
 
+long long int factorial(int n) {
+  /*
+   * Return n!
+   */
+  long long int f = 1;
+  for (int x = 2; x <= n; ++x)
+    f *= x;
+  return f;
+}
+
 bool is_coprime(int x, int y) {
   /*
    * Is the two integers coprime/relatively prime?

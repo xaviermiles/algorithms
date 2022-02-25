@@ -25,6 +25,20 @@ void test_euclids_gcd() {
   cout << endl;
 }
 
+void test_factorial() {
+  int test_sets[4][2] = {
+    {0, 1},
+    {1, 1},
+    {3, 6},
+    {5, 120}
+  };
+  cout << "Testing factorial" << '\n';
+  for (auto &set : test_sets) {
+    cout << (factorial(set[0]) == set[1]) << ", ";
+  }
+  cout << "\n\n";
+}
+
 void test_is_coprime() {
   int test_sets[2][3] = {
     {14, 25, 1},
@@ -81,6 +95,7 @@ void test_sieve_of_eratosthenes() {
 
 int main() {
   test_euclids_gcd();
+  test_factorial();
   test_is_coprime();
   test_lcm();
 
